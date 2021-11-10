@@ -26,6 +26,7 @@ const openPreferences = () => {
   })
 
   win.loadURL(`file://${PATHS.PAGES.PREFERENCES}`)
+  win.webContents.openDevTools()
 }
 
 const buildTray = async (openPreferences) => {
@@ -92,6 +93,7 @@ ipcMain.on('connect', async (event, data) => {
 
 ipcMain.on('save', async (event, data) => {
   settings.set(data)
+  app.setLoginItemSettings({ openAtLogin: data.openOnStart })
   hass.reload()
   buildTray(openPreferences)
 })

@@ -14,10 +14,6 @@
     <div class="container mt-2">
       <form class="row g-3 needs-validation" novalidate>
         <h1>Settings</h1>
-        
-        <div class="col-md-12" id="errorBox" style="display: none;">
-
-        </div>
         <div class="col-md-9">
           <div class="form-floating">
             <input type="text" class="form-control" id="hassURL" placeholder="http://example.com" required>
@@ -36,12 +32,18 @@
             <label for="hassLLAC" class="form-label">Long Lived Access Token</label>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
+          <input type="checkbox" class="btn-check" id="openOnStart" autocomplete="off">
+          <label class="btn col-md-12 btn-outline-primary" for="openOnStart">
+            Open On Startup
+          </label>
+        </div>
+        <div class="col-md-4">
           <button type="button" class="col-md-12 btn btn-primary" id="connect">
             Validate Connection
           </button>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <button type="button" class="col-md-12 btn btn-primary" id="open-icons">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder2-open" viewBox="0 0 16 16">
               <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v.64c.57.265.94.876.856 1.546l-.64 5.124A2.5 2.5 0 0 1 12.733 15H3.266a2.5 2.5 0 0 1-2.481-2.19l-.64-5.124A1.5 1.5 0 0 1 1 6.14V3.5zM2 6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5a.5.5 0 0 0-.5.5V6zm-.367 1a.5.5 0 0 0-.496.562l.64 5.124A1.5 1.5 0 0 0 3.266 14h9.468a1.5 1.5 0 0 0 1.489-1.314l.64-5.124A.5.5 0 0 0 14.367 7H1.633z"/>
@@ -53,7 +55,7 @@
           <h1>Configuration</h1>
         </div>
         <div class="col-md-12">
-          <textarea class="form-control" id="appConfig" rows=5 cols="100" onchange="prettyPrint()"></textarea>
+          <textarea class="form-control" id="appConfig" rows=5 cols="100"></textarea>
           <div class="invalid-feedback">
             Invalid JSON
           </div>

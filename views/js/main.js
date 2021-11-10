@@ -11,7 +11,8 @@ const elements = {
     url: document.getElementById('hassURL'),
     llac: document.getElementById('hassLLAC'),
     port: document.getElementById('hassPORT'),
-    config: document.getElementById('appConfig')
+    config: document.getElementById('appConfig'),
+    openOnStart: document.getElementById('openOnStart')
   },
   toasts: {
     connectSuccess: new bootstrap.Toast(document.getElementById('connect-success-toast')),
@@ -20,6 +21,15 @@ const elements = {
 }
 
 // EVENT LISTENERS
+elements.fields.config.addEventListener('onChange', () => {
+  const config = elements.fields.config
+  try {
+    config.value = JSON.stringify(JSON.parse(config.value), undefined, 2)
+  } catch (e) {
+    console.log('Invalid JSON')
+  }
+})
+
 elements.buttons.connect.addEventListener('click', async () => {
   const { url, llac, port } = elements.fields
   await clearValidation(url, llac, port)
@@ -52,7 +62,7 @@ elements.buttons.exit.addEventListener('click', (e) => {
 
 elements.buttons.save.addEventListener('click', (e) => {
   e.preventDefault()
-  const { url, llac, port, config } = elements.fields
+  const { url, llac, port, config, openOnStart } = elements.fields
   clearValidation(url, llac, port, config)
   const allValid = showValidation(url, llac, port)
   let parsedConfig
@@ -72,7 +82,8 @@ elements.buttons.save.addEventListener('click', (e) => {
     url: url.value,
     llac: llac.value,
     port: port.value,
-    config: parsedConfig
+    config: parsedConfig,
+    openOnStart: openOnStart.checked
   })
 })
 
@@ -85,6 +96,7 @@ ipcRenderer.on('settings', (event, data) => {
   llac.value = data.llac
   port.value = data.port
   config.value = JSON.stringify(data.config, undefined, 2)
+  openOnStart.checked = data.openOnStart
 })
 
 // FUNCTIONS
@@ -106,13 +118,4 @@ function clearValidation (...elements) {
 function setValidation (element, valid) {
   element.classList.remove('is-valid', 'is-invalid')
   element.classList.add(valid ? 'is-valid' : 'is-invalid')
-}
-
-function prettyPrint () {
-  const config = elements.fields.config
-  try {
-    config.value = JSON.stringify(JSON.parse(config.value), undefined, 2)
-  } catch (e) {
-    console.log('Invalid JSON')
-  }
 }

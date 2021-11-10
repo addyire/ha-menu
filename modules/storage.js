@@ -12,6 +12,7 @@ let settings = {
   url: '',
   llac: '',
   port: 8123,
+  openOnStart: false,
   refreshInterval: 1800,
   config: {
     items: [
