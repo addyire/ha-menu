@@ -1,0 +1,14 @@
+TODO
+- fix timeout problem
+- logging
+
+
+SOMEWHAT DONE
+- invalid config checking
+
+DONE
+- change isTemplate to labelTemplate and titleTemplate
+- remove checkedentity 
+- rename normal to label
+- rename reload in prefrences to reload + save
+- update readme
