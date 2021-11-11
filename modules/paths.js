@@ -4,9 +4,13 @@ const settings = require('./storage')
 const fs = require('fs')
 
 module.exports = {
-  ICON: path.join(__dirname, '../assets/iconTemplate@3x.png'),
-  ERROR_ICON: path.join(__dirname, '../assets/redIcon@3x.png'),
-  WARNING_ICON: path.join(__dirname, '../assets/alertTemplate@2x.png'),
+  MENUBAR_ICONS: {
+    DEFAULT: path.join(__dirname, '../assets/iconTemplate@3x.png'),
+    ERROR: path.join(__dirname, '../assets/redIcon@3x.png')
+  },
+  ICONS: {
+    WARNING_ICON: path.join(__dirname, '../assets/alertTemplate@2x.png')
+  },
   ICONS_FOLDER: path.join(settings.path, 'icons'),
   PAGES: {
     PREFERENCES: path.join(__dirname, '../views/preferences.html')

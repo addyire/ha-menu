@@ -5,7 +5,7 @@ const elements = {
     connect: document.getElementById('connect'),
     openIcons: document.getElementById('open-icons'),
     save: document.getElementById('save'),
-    exit: document.getElementById('exit')
+    exit: document.getElementById('exit'),
   },
   fields: {
     url: document.getElementById('hassURL'),
@@ -16,7 +16,12 @@ const elements = {
   },
   toasts: {
     connectSuccess: new bootstrap.Toast(document.getElementById('connect-success-toast')),
-    connectFailure: new bootstrap.Toast(document.getElementById('connect-failed-toast'))
+    connectFailure: new bootstrap.Toast(document.getElementById('connect-failed-toast')),
+    saveSuccess: new bootstrap.Toast(document.getElementById('save-success-toast')),
+    saveFailure: new bootstrap.Toast(document.getElementById('save-failed-toast')),
+  },
+  toastMessages: {
+    saveError: document.getElementById('save-error-reason')
   }
 }
 
@@ -60,7 +65,7 @@ elements.buttons.exit.addEventListener('click', (e) => {
   ipcRenderer.send('exit', {})
 })
 
-elements.buttons.save.addEventListener('click', (e) => {
+elements.buttons.save.addEventListener('click', async (e) => {
   e.preventDefault()
   const { url, llac, port, config, openOnStart } = elements.fields
   clearValidation(url, llac, port, config)
@@ -78,13 +83,20 @@ elements.buttons.save.addEventListener('click', (e) => {
     return
   }
 
-  ipcRenderer.send('save', {
+  let response = await ipcRenderer.sendSync('save', {
     url: url.value,
     llac: llac.value,
     port: port.value,
     config: parsedConfig,
     openOnStart: openOnStart.checked
   })
+
+  if(!response.success) {
+    elements.toastMessages.saveError.innerText = response.message 
+    elements.toasts.saveFailure.show()
+  } else {
+    elements.toasts.saveSuccess.show()
+  }
 })
 
 // IPC EVENTS

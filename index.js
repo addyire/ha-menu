@@ -5,7 +5,7 @@ const { settings, cache } = require('./modules/storage')
 const hass = require('./modules/hass')
 const itemBuilder = require('./modules/itemBuilder')
 
-const refreshInterval = 60 * 1000
+const refreshInterval = 30 * 60 * 1000
 let win, tray
 
 const openPreferences = () => {
@@ -28,23 +28,35 @@ const openPreferences = () => {
   win.loadURL(`file://${PATHS.PAGES.PREFERENCES}`)
 }
 
-const buildTray = async (openPreferences) => {
+const buildTray = async () => {
   const { config } = settings.get()
   const hassStatus = await hass.status()
-  let menuTemplate = []
 
-  if (!tray) tray = new Tray(PATHS.ICON)
+  if (!tray) tray = new Tray(PATHS.MENUBAR_ICONS.DEFAULT)
+
+  let menuTemplate = []
+  let trayTitle = ''
 
   if (!hassStatus.connected || !config.items || config.items.length === 0) {
-    tray.setImage(PATHS.ERROR_ICON)
+    tray.setImage(PATHS.MENUBAR_ICONS.ERROR)
     tray.setTitle('')
     menuTemplate.push({
-      label: !hassStatus.connected ? 'Unable to connect' : 'No items to display',
-      enabled: false
+      label: !hassStatus.connected ? 'Unable To Connect' : 'No Items To Display',
+      enabled: false,
+      icon: PATHS.ICONS.WARNING_ICON
+    }, {
+      label: 'Retry',
+      click: () => { buildTray() }
     })
   } else {
-    tray.setImage(PATHS.ICON)
-    menuTemplate = await itemBuilder(config.items, () => { buildTray(openPreferences) })
+    if (config.titleTemplate) {
+      trayTitle = await hass.render(config.titleTemplate)
+    } else if (config.title) {
+      trayTitle = config.title
+    }
+
+    tray.setImage(PATHS.MENUBAR_ICONS.DEFAULT)
+    menuTemplate = await itemBuilder(config.items, () => { buildTray() })
   }
 
   menuTemplate.push(
@@ -54,26 +66,15 @@ const buildTray = async (openPreferences) => {
   )
 
   tray.setContextMenu(Menu.buildFromTemplate(menuTemplate))
-
-  let trayTitle = ''
-
-  if (config.titleTemplate) {
-    trayTitle = await hass.render(config.titleTemplate)
-  } else if (config.title) {
-    trayTitle = config.title
-  }
-
   tray.setTitle(trayTitle.substr(0, 34))
+
   cache.clear()
 }
 
 app.on('ready', async () => {
-  const autoUpdate = async () => {
-    buildTray(openPreferences)
-    app.dock.hide()
-    setTimeout(autoUpdate, refreshInterval)
-  }
-  autoUpdate()
+  app.dock.hide()
+  buildTray()
+  setInterval(buildTray, refreshInterval)
 })
 
 app.on('window-all-closed', () => {
@@ -91,26 +92,22 @@ ipcMain.on('connect', async (event, data) => {
 })
 
 ipcMain.on('save', async (event, data) => {
-  settings.set(data)
-  app.setLoginItemSettings({ openAtLogin: data.openOnStart })
-  hass.reload()
-  buildTray(openPreferences)
+  try {
+    settings.set(data)
+    app.setLoginItemSettings({ openAtLogin: data.openOnStart })
+    hass.reload()
+    buildTray(openPreferences)
+    event.returnValue = {
+      success: true
+    }
+  } catch (err) {
+    event.returnValue = {
+      success: false,
+      message: err.message
+    }
+  }
 })
 
 ipcMain.on('exit', (_, __) => {
   if (win) win.close()
-})
-
-ipcMain.on('validateConfig', async (event, data) => {
-  try {
-    await itemBuilder(data.items)
-    event.returnValue = {
-      valid: true
-    }
-  } catch (err) {
-    event.returnValue = {
-      valid: false,
-      message: err.message
-    }
-  }
 })
