@@ -1,7 +1,5 @@
 # ha-menu
-<img src="https://img.shields.io/github/stars/addyire/ha-menu?style=plastic">
-<img src="https://img.shields.io/badge/contributions-welcome-brightgreen">
-<br>
+<img src="https://img.shields.io/github/stars/addyire/ha-menu?style=badge"> <img src="https://img.shields.io/badge/contributions-welcome-brightgreen"><br>
 An **insanely** customizable way to interact with Home Assistant in the menubar
 
 <img src="img/preview.png" width=800>
@@ -12,8 +10,9 @@ An **insanely** customizable way to interact with Home Assistant in the menubar
 - [App Configuration](#app-configuration)
 - [Menubar Configuration](#menubar-configuration)
   - [Menu Item Types](#menu-item-types)
-- [Icons](#icons)
-- [Templating](#templating)
+  - [MenuAction](#menuaction)
+  - [Icons](#icons)
+  - [Templating](#templating)
 
 # Installation
 
@@ -175,7 +174,7 @@ Looks like a label but opens Home Assistant in your browser when clicked.
 * **required** `label` {`String`}: The label for this item
 * `icon` {`String`}: The icon name for this item
 
-# `MenuAction`
+## MenuAction
 
 A `MenuAction` is how you can interact with Home Assistant.
 
@@ -194,7 +193,7 @@ A `MenuAction` is how you can interact with Home Assistant.
 }
 ```
 
-# Icons
+## Icons
 
 To add an icon to your Menu Bar follow these steps
 
@@ -208,7 +207,7 @@ To add an icon to your Menu Bar follow these steps
 * Make the size of your image `32x32`
 * Add `@2x` to the end of your file name to make it a "High Resolution Image" (Read below for more information)
 
-## High Resolution Image
+### High Resolution Image
 
 To make your image look better in the Menubar you can make it "High Resolution" which increases the DPI. Here are the following options:
 
@@ -229,35 +228,35 @@ Just add one of these to the end of your file.
 #### Example
 `icon.png` -> `icon@2x.png`
 
-## Icon Templates
+### Icon Templates
 
 It is recommended that your icons are made a template. To make your icon a template
 
 * Your image **must** be only black pixels with a transparent background
 * Add `Template` to the end of the name of your file. 
 
-## File Name Examples
+### File Name Examples
 
 * `icon.png` -> `iconTemplate.png`
 * `icon@2x.png` -> `iconTemplate@2x.png`
 
-## [More Information Here](https://www.electronjs.org/docs/latest/api/native-image#high-resolution-image)
+### [More Information Here](https://www.electronjs.org/docs/latest/api/native-image#high-resolution-image)
 
-# Templating
+## Templating
 
 **The customization is not over!** You can also use Home Assistant Templates in certain fields!
 
-## Supported Fields
+### Supported Fields
 
 * `label`
 * `icon`
 * `title`
 
-## Converting To Templates
+### Converting To Templates
 
 To make a field a template just add `Template` to the end of the field name and put your template in the value.
 
-## Example
+#### Example
 ```json
 {
   "labelTemplate": "{{ states('light.my_light') }}"
