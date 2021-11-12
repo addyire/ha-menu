@@ -1,7 +1,5 @@
 # ha-menu
-<img src="https://img.shields.io/github/stars/addyire/ha-menu?style=plastic">
-<img src="https://img.shields.io/badge/contributions-welcome-brightgreen">
-<br>
+<img src="https://img.shields.io/github/stars/addyire/ha-menu?style=badge"> <img src="https://img.shields.io/badge/contributions-welcome-brightgreen"><br>
 An **insanely** customizable way to interact with Home Assistant in the menubar
 
 <img src="img/preview.png" width=800>
