@@ -29,7 +29,6 @@ const openPreferences = () => {
   })
 
   win.loadURL(`file://${PATHS.PAGES.PREFERENCES}`)
-  win.webContents.openDevTools()
 }
 
 const buildTray = async () => {
