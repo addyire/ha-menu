@@ -6,6 +6,7 @@ const fs = require('fs')
 module.exports = {
   MENUBAR_ICONS: {
     DEFAULT: path.join(__dirname, '../assets/iconTemplate@3x.png'),
+    TRANSPARENT: path.join(__dirname, '../assets/transparentIconTemplate@3x.png'),
     ERROR: path.join(__dirname, '../assets/redIcon@3x.png')
   },
   ICONS: {

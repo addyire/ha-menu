@@ -1,7 +1,7 @@
 {
   "name": "ha-menu",
   "description": "Customizable way to interact with Home Assistant through the menu bar on macOS.",
-  "version": "1.0.1b",
+  "version": "1.0.2b",
   "author": {
     "name": "Addison Ireland"
   },

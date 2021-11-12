@@ -9,6 +9,7 @@ An **insanely** customizable way to interact with Home Assistant in the menubar
 - [Installation](#installation)
 - [App Configuration](#app-configuration)
 - [Menubar Configuration](#menubar-configuration)
+  - [Title](#title)
   - [Menu Item Types](#menu-item-types)
   - [MenuAction](#menuaction)
   - [Icons](#icons)
@@ -45,7 +46,7 @@ In the preferences window, under `Config` is where you will put the JSON which c
 * `title` {`String`}: The text that will show up next to the Home Assistant icon in the MenuBar. **Limited to 34 charachters.**
 
 #### Example
-```
+```json
 {
   "items": [
     {
@@ -57,13 +58,27 @@ In the preferences window, under `Config` is where you will put the JSON which c
 }
 ```
 
+## Title
+
+The title shows to the right of the icon in the menu bar. The title can be set by adding the `title` key to the main JSON. The title should be a string and templating is supported (scroll down for more info on templating).
+
+#### Note
+- The title is limited to 24 characters
+
+#### Example
+```json
+{
+  "title": "Hello!"
+}
+```
+
 ## Menu Item Types
 
 There are 4 types of Menu Items
 
 * Label
 * Dropdown
-* Seperator
+* Separator
 * Open HASS
 
 ### Type: `label`
@@ -145,12 +160,12 @@ Creates a dropdown menu
 }
 ```
 
-## Type: `seperator`
+## Type: `separator`
 
-* **required** `type`: `seperator`
+* **required** `type`: `separator`
 
 #### Example
-<img src="img/examples/seperator.png" width=400>
+<img src="img/examples/separator.png" width=400>
 
 ```json
 {
@@ -158,7 +173,7 @@ Creates a dropdown menu
   "label": "Item 1"
 },
 {
-  "type": "seperator"
+  "type": "separator"
 },
 {
   "type": "normal",

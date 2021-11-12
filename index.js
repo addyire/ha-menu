@@ -40,11 +40,18 @@ const buildTray = async () => {
   let menuTemplate = []
   let trayTitle = ''
 
-  if (!hassStatus.connected || !config.items || config.items.length === 0) {
+  if (!config.items || config.items.length === 0) {
+    tray.setImage(PATHS.MENUBAR_ICONS.TRANSPARENT)
+    tray.setTitle('')
+    menuTemplate.push({
+      label: 'No Items To Display',
+      enabled: false
+    })
+  } else if (!hassStatus.connected) {
     tray.setImage(PATHS.MENUBAR_ICONS.ERROR)
     tray.setTitle('')
     menuTemplate.push({
-      label: !hassStatus.connected ? 'Unable To Connect' : 'No Items To Display',
+      label: 'Unable To Connect',
       enabled: false,
       icon: PATHS.ICONS.WARNING_ICON
     }, {

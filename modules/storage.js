@@ -15,12 +15,8 @@ let settings = {
   openOnStart: false,
   refreshInterval: 1800,
   config: {
-    items: [
-      {
-        type: 'label',
-        label: 'Welcome!'
-      }
-    ]
+    items: [],
+    title: ''
   }
 }
 

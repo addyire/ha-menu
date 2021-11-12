@@ -57,7 +57,7 @@ const buildItems = async (items, rebuildFunction) => {
 
         break
       }
-      case 'seperator': {
+      case 'separator': {
         builtItem.type = 'separator'
         break
       }

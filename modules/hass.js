@@ -68,7 +68,6 @@ module.exports.status = async () => {
       message: apiStatus.data
     }
   } catch (err) {
-    console.log('status resulted in error')
     return {
       connected: false,
       message: err.message
