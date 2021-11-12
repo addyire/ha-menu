@@ -14,6 +14,9 @@ const elements = {
     config: document.getElementById('appConfig'),
     openOnStart: document.getElementById('openOnStart')
   },
+  elements: {
+    version: document.getElementById('version'),
+  },
   toasts: {
     connectSuccess: new bootstrap.Toast(document.getElementById('connect-success-toast')),
     connectFailure: new bootstrap.Toast(document.getElementById('connect-failed-toast')),
@@ -104,6 +107,7 @@ ipcRenderer.on('settings', (event, data) => {
   const { url, llac, port, config } = elements.fields
   console.log(data)
 
+  elements.elements.version.innerText = `v${data.version}`
   url.value = data.url
   llac.value = data.llac
   port.value = data.port

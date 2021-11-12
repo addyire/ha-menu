@@ -1,16 +1,26 @@
 # ha-menu
-<img src="https://img.shields.io/badge/contributions-welcome-brightgreen"><br>
+<img src="https://img.shields.io/github/stars/addyire/ha-menu?style=plastic">
+<img src="https://img.shields.io/badge/contributions-welcome-brightgreen">
+<br>
 An **insanely** customizable way to interact with Home Assistant in the menubar
 
 <img src="img/preview.png" width=800>
 
+# Table Of Contents
+
+- [Installation](#installation)
+- [App Configuration](#app-configuration)
+- [Menubar Configuration](#menubar-configuration)
+  - [Menu Item Types](#menu-item-types)
+- [Icons](#icons)
+- [Templating](#templating)
 
 # Installation
 
 `ha-menu` is still in beta so there are no official builds out at the moment. To build it yourself:
 
 1. Clone this repository 
-2. Run `yarn install` <- this may be optional (im too lazy to check)
+2. Run `yarn install`
 3. Run `yarn dist`
 
 # App Configuration
@@ -48,16 +58,16 @@ In the preferences window, under `Config` is where you will put the JSON which c
 }
 ```
 
-## Menu Items
+## Menu Item Types
 
 There are 4 types of Menu Items
 
+* Label
 * Dropdown
 * Seperator
 * Open HASS
-* Label
 
-## Type: `label`
+### Type: `label`
 
 * **required** `type`: `label`
 * `label`{`String`}: The label for this Menu Item

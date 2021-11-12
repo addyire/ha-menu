@@ -21,11 +21,15 @@ const openPreferences = () => {
   })
 
   win.webContents.on('did-finish-load', async () => {
-    win.webContents.send('settings', settings.get())
+    win.webContents.send('settings', {
+      ...settings.get(),
+      version: app.getVersion()
+    })
     win.webContents.send('hassStatus', await hass.status())
   })
 
   win.loadURL(`file://${PATHS.PAGES.PREFERENCES}`)
+  win.webContents.openDevTools()
 }
 
 const buildTray = async () => {
