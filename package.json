@@ -12,7 +12,7 @@
     "productName": "HA Menu",
     "files": [
       "!**/img",
-      "!**/examples"
+      "!**/example"
     ]
   },
   "scripts": {

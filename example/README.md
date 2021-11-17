@@ -8,4 +8,4 @@ This folder contains a example configuration that will demonstrate different par
 2. Enter Home Assistant information
 3. Click `Open Icons Folder`
 4. Copy all images from the `icons` folder here
-5. Paste `configuration.json` into preferences
+5. Paste `example.json` into preferences
