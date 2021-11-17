@@ -21,7 +21,7 @@ module.exports = {
 module.exports.ICON_GENERATOR = (name) => {
   const iconPath = path.join(module.exports.ICONS_FOLDER, name)
   if (fs.existsSync(iconPath)) return iconPath
-  return module.exports.WARNING_ICON
+  return module.exports.ICONS.WARNING_ICON
 }
 
 if (!fs.existsSync(module.exports.ICONS_FOLDER)) {

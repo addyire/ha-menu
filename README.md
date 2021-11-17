@@ -8,6 +8,7 @@ An **insanely** customizable way to interact with Home Assistant in the menubar
 
 - [Installation](#installation)
 - [App Configuration](#app-configuration)
+- [Example Configuration](example/README.md)
 - [Menubar Configuration](#menubar-configuration)
   - [Title](#title)
   - [Menu Item Types](#menu-item-types)
@@ -26,6 +27,10 @@ An **insanely** customizable way to interact with Home Assistant in the menubar
 # App Configuration
 
 To open the Preferences window, click the Home Assistant Icon in your menubar, and then go to `Preferences`. 
+
+The configuration file is stored here if you wish to edit it yourself: <br>
+`/Users/[YOUR USERNAME]/Library/Application Support/ha-menu/settings.json`
+*Note: This file also contains the app configuration settings so make sure you know what you are doing* 
 
 * ### `Server URL`
   * #### Example: `http://homeassistant`
