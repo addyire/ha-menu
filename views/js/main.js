@@ -6,16 +6,21 @@ const elements = {
     openIcons: document.getElementById('open-icons'),
     save: document.getElementById('save'),
     exit: document.getElementById('exit'),
+    saveConfig: document.getElementById('saveConfig'),
+    loadFile: document.getElementById('loadFile'),
+    paste: document.getElementById('paste'),
   },
   fields: {
     url: document.getElementById('hassURL'),
     llac: document.getElementById('hassLLAC'),
     port: document.getElementById('hassPORT'),
     config: document.getElementById('appConfig'),
-    openOnStart: document.getElementById('openOnStart')
+    openOnStart: document.getElementById('openOnStart'),
+    refreshInterval: document.getElementById('refreshInterval')
   },
   elements: {
     version: document.getElementById('version'),
+    refreshTime: document.getElementById('refreshTime'),
   },
   toasts: {
     connectSuccess: new bootstrap.Toast(document.getElementById('connect-success-toast')),
@@ -29,6 +34,11 @@ const elements = {
 }
 
 // EVENT LISTENERS
+elements.fields.refreshInterval.oninput = (event) => {
+  const {refreshInterval} = elements.fields
+  elements.elements.refreshTime.innerText = refreshInterval.value === '0' ? 'Never' : refreshInterval.value + ' minutes'
+}
+
 elements.fields.config.addEventListener('onChange', () => {
   const config = elements.fields.config
   try {
@@ -59,6 +69,31 @@ elements.buttons.connect.addEventListener('click', async () => {
   }
 })
 
+elements.buttons.saveConfig.addEventListener('click', (e) => {
+  e.preventDefault()
+  ipcRenderer.send('exportConfig', {})
+})
+
+elements.buttons.loadFile.addEventListener('click', (e) => {
+  e.preventDefault()
+  ipcRenderer.send('loadFromFile', {})
+  location.reload()
+})
+
+elements.buttons.paste.addEventListener('click', (e) => {
+  e.preventDefault()
+  navigator.clipboard.readText().then(text => {
+    try{
+      let parsedData = JSON.parse(text)
+      elements.fields.config.value = JSON.stringify(parsedData, undefined, 2)
+    } catch (e) {
+      console.log('Invalid JSON')
+    }
+  }).catch(err => {
+    console.log('Failed to read clipboard contents: ', err)
+  })
+})
+
 elements.buttons.openIcons.addEventListener('click', () => {
   ipcRenderer.send('openIconsFolder', {})
 })
@@ -70,7 +105,7 @@ elements.buttons.exit.addEventListener('click', (e) => {
 
 elements.buttons.save.addEventListener('click', async (e) => {
   e.preventDefault()
-  const { url, llac, port, config, openOnStart } = elements.fields
+  const { url, llac, port, config, openOnStart, refreshInterval } = elements.fields
   clearValidation(url, llac, port, config)
   const allValid = showValidation(url, llac, port)
   let parsedConfig
@@ -90,6 +125,7 @@ elements.buttons.save.addEventListener('click', async (e) => {
     url: url.value,
     llac: llac.value,
     port: port.value,
+    refreshInterval: parseInt(refreshInterval.value),
     config: parsedConfig,
     openOnStart: openOnStart.checked
   })
@@ -104,15 +140,18 @@ elements.buttons.save.addEventListener('click', async (e) => {
 
 // IPC EVENTS
 ipcRenderer.on('settings', (event, data) => {
-  const { url, llac, port, config } = elements.fields
   console.log(data)
+  const { url, llac, port, config, refreshInterval } = elements.fields
 
   elements.elements.version.innerText = `v${data.version}`
   url.value = data.url
   llac.value = data.llac
   port.value = data.port
+  refreshInterval.value = data.refreshInterval
   config.value = JSON.stringify(data.config, undefined, 2)
   openOnStart.checked = data.openOnStart
+
+  refreshInterval.oninput()
 })
 
 // FUNCTIONS

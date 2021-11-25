@@ -1,2 +1,3 @@
 TODO
 - logging
+- remove configuration.js file and move to index

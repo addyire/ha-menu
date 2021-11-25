@@ -9,6 +9,7 @@ An **insanely** customizable way to interact with Home Assistant in the menubar
 - [Installation](#installation)
 - [App Configuration](#app-configuration)
 - [Example Configuration](example/README.md)
+- [Importing & Exporting](#importing-&-exporting)
 - [Menubar Configuration](#menubar-configuration)
   - [Title](#title)
   - [Menu Item Types](#menu-item-types)
@@ -29,7 +30,7 @@ An **insanely** customizable way to interact with Home Assistant in the menubar
 To open the Preferences window, click the Home Assistant Icon in your menubar, and then go to `Preferences`. 
 
 The configuration file is stored here if you wish to edit it yourself: <br>
-`/Users/[YOUR USERNAME]/Library/Application Support/ha-menu/settings.json`
+`/Users/[YOUR USERNAME]/Library/Application Support/ha-menu/settings.json` <br>
 *Note: This file also contains the app configuration settings so make sure you know what you are doing* 
 
 * ### `Server URL`
@@ -42,6 +43,17 @@ The configuration file is stored here if you wish to edit it yourself: <br>
 
 * ### `Long Lived Access Token`
   * Your long lived access token from home assistant. To make one go to Your Profile -> Long-Lived Access Tokens
+
+### Refresh Interval
+
+The refresh interval is how often the menubar will automatically refresh with new data. If set to never, the menubar will never automatically refresh, but a refresh can still be triggered from a Menu Item.
+
+# Importing & Exporting
+
+In the preferences window, you can export your configuration as a `.bar` file. You can also import `.bar` configuration files from the preferences window. If you want a shortcut to import configuration files, you can hold **Shift** while clicking `Preferences` in the menubar or you can just double click on a `.bar` file.
+
+#### Note
+`.bar` files are just a JSON file with a different extension. This means you can edit the configuration files if you wish.
 
 # Menubar Configuration
 
@@ -67,8 +79,6 @@ In the preferences window, under `Config` is where you will put the JSON which c
 
 The title shows to the right of the icon in the menu bar. The title can be set by adding the `title` key to the main JSON. The title should be a string and templating is supported (scroll down for more info on templating).
 
-#### Note
-- The title is limited to 24 characters
 
 #### Example
 ```json
@@ -76,6 +86,9 @@ The title shows to the right of the icon in the menu bar. The title can be set b
   "title": "Hello!"
 }
 ```
+
+#### Note
+  - The title is limited to 24 characters
 
 ## Menu Item Types
 
