@@ -17,7 +17,7 @@ const openPreferences = () => {
   // create the preference window
   win = new BrowserWindow({
     width: 850,
-    height: 650,
+    height: 670,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false

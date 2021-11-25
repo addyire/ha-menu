@@ -1,8 +1,8 @@
+<img src="https://i.imgur.com/7nSvc2E.png" width=80 align="right"><br>
 # ha-menu
-<img src="https://img.shields.io/github/stars/addyire/ha-menu?style=badge"> <img src="https://img.shields.io/badge/contributions-welcome-brightgreen"><br>
+<img src="https://img.shields.io/github/package-json/v/addyire/ha-menu?color=red"> <img src="https://img.shields.io/github/stars/addyire/ha-menu?style=badge&color=brightgreen"> <img src="https://img.shields.io/badge/contributions-welcome-blue"><br>
 An **insanely** customizable way to interact with Home Assistant in the menubar
-
-<img src="img/preview.png" width=800>
+<img src="https://i.imgur.com/HAag5aG.png" width=800>
 
 # Table Of Contents
 
@@ -114,7 +114,7 @@ There are 4 types of Menu Items
 * If an item has no `action` and `reload` is not true, the item will be greyed out.
 
 #### Examples
-<img src="img/examples/label.png" width=400>
+<img src="https://imgur.com/5Hdeilt.png" width=400>
 
 ```json
 {
@@ -155,7 +155,7 @@ Creates a dropdown menu
 * `icon` {`String`}: The icon name for this item
 
 #### Example
-<img src="img/examples/dropdown.png" width=400>
+<img src="https://imgur.com/L3r9WOO.png" width=400>
 
 ```json
 {
@@ -183,7 +183,7 @@ Creates a dropdown menu
 * **required** `type`: `separator`
 
 #### Example
-<img src="img/examples/separator.png" width=400>
+<img src="https://imgur.com/p3yeolj.png" width=400>
 
 ```json
 {
