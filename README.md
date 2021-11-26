@@ -19,11 +19,16 @@ An **insanely** customizable way to interact with Home Assistant in the menubar
 
 # Installation
 
-`ha-menu` is still in beta so there are no official builds out at the moment. To build it yourself:
+To use a prebuilt version...
+1. Head over to [releases](https://github.com/addyire/ha-menu/releases) and download the latest release
+2. Extract the zip and drag the application into your `Applications` folder. 
+3. Open HA Menu
 
-1. Clone this repository 
+To build it yourself...
+1. Clone this repository
 2. Run `yarn install`
 3. Run `yarn dist`
+4. Your executable will be found in the newly created `dist` folder
 
 # App Configuration
 
@@ -51,9 +56,6 @@ The refresh interval is how often the menubar will automatically refresh with ne
 # Importing & Exporting
 
 In the preferences window, you can export your configuration as a `.bar` file. You can also import `.bar` configuration files from the preferences window. If you want a shortcut to import configuration files, you can hold **Shift** while clicking `Preferences` in the menubar or you can just double click on a `.bar` file.
-
-#### Note
-`.bar` files are just a JSON file with a different extension. This means you can edit the configuration files if you wish.
 
 # Menubar Configuration
 
@@ -102,11 +104,11 @@ There are 4 types of Menu Items
 ### Type: `label`
 
 * **required** `type`: `label`
-* `label`{`String`}: The label for this Menu Item
+* `label` {`String`}: The label for this Menu Item
 * `icon` {`String`}: The icon name for this item
 * `reload` {`Boolean`}: Whether or not the Menu Bar should be reloaded on click
 * `action` {`MenuAction`}: The action to run when clicked
-* `checkedTemplate`{`String`}: Whether or not this label should be checked. The string is a Home Assistant template which should resolve to `on`, `true`,`off`, or `false`.
+* `checkedTemplate` {`String`}: Whether or not this label should be checked. The string is a Home Assistant template which should resolve to `on`, `true`,`off`, or `false`.
 * `hiddenTemplate` {`String`}: Whether or not this label should be hidden. The string is a Home Assistant template which should resolve to `on`, `true`,`off`, or `false`.  
 
 #### Note

@@ -1,21 +1,27 @@
 {
   "name": "ha-menu",
   "description": "Customizable way to interact with Home Assistant through the menu bar on macOS.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": {
     "name": "Addison Ireland"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/addyire/ha-menu"
   },
   "main": "index.js",
   "license": "MIT",
   "build": {
     "appId": "com.addyire.hamenu",
     "productName": "HA Menu",
-    "fileAssociations": [{
-      "ext": "bar",
-      "name": "BAR Configuration",
-      "isPackage": false,
-      "role": "Editor"
-    }],
+    "fileAssociations": [
+      {
+        "ext": "bar",
+        "name": "BAR Configuration",
+        "isPackage": true,
+        "role": "Editor"
+      }
+    ],
     "files": [
       "!**/img",
       "!**/example"
@@ -37,7 +43,11 @@
     "eslint-plugin-promise": "^5.1.1"
   },
   "dependencies": {
+    "archiver": "^5.3.0",
     "axios": "^0.24.0",
-    "homeassistant": "^0.2.0"
+    "electron-log": "^4.4.1",
+    "homeassistant": "^0.2.0",
+    "ncp": "^2.0.0",
+    "unzipper": "^0.10.11"
   }
 }

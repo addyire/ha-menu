@@ -1,9 +1,10 @@
 const { app, BrowserWindow, ipcMain, shell, Tray, Menu, dialog } = require('electron')
+const log = require('electron-log')
 
 const { PATHS, settings, cache } = require('./modules/data')
 const hass = require('./modules/hass')
 const itemBuilder = require('./modules/itemBuilder')
-const { loadFile } = require('./modules/configuration')
+const { importConfig, exportConfig } = require('./modules/configuration')
 
 // set some variables
 let refreshInterval = settings.get('refreshInterval') * 60 * 1000 // default to 30 minutes
@@ -11,6 +12,7 @@ let win, tray
 
 // open the preferences window
 const openPreferences = () => {
+  log.info('Opening preferences window')
   // show the preference window if one is already open
   if (win) return win.show()
 
@@ -26,6 +28,7 @@ const openPreferences = () => {
 
   // once the window loads, send the settings and hass status
   win.webContents.on('did-finish-load', async () => {
+    log.info('Preferences window finished loading. Sending settings, and hass status.')
     win.webContents.send('settings', {
       ...settings.getAll(),
       version: app.getVersion()
@@ -39,6 +42,8 @@ const openPreferences = () => {
 
 // open a configuration file
 const openLoadConfigDialog = () => {
+  log.info('Opening load config dialog')
+
   const path = dialog.showOpenDialogSync({
     title: 'Open Configuration File',
     message: 'This file should end in .bar',
@@ -48,13 +53,16 @@ const openLoadConfigDialog = () => {
     ]
   })
 
+  log.info(path ? `Loading config file ${path}` : 'No config file selected. Doing nothing.')
   if (!path) return
 
-  loadFile(path[0], () => { buildTray(openPreferences) })
+  importConfig(path[0], () => { buildTray(openPreferences) })
 }
 
 // build tray menu
 const buildTray = async () => {
+  log.info('Building tray menu')
+
   // get latest config and hass status
   const { config } = settings.getAll()
   const hassStatus = await hass.status()
@@ -71,6 +79,7 @@ const buildTray = async () => {
 
   // if not connected to hass...
   if (!hassStatus.connected) {
+    log.info('Not connected to hass')
     // set tray image to red, and clear title
     tray.setImage(PATHS.MENUBAR_ICONS.ERROR)
     tray.setTitle('')
@@ -92,6 +101,7 @@ const buildTray = async () => {
       trayTitle = config.title
     }
 
+    log.info('Building items')
     // build the tray items
     menuTemplate = await itemBuilder(config.items, () => { buildTray() })
     // set the tray image
@@ -123,16 +133,18 @@ const buildTray = async () => {
 
 // when app is opened from file...
 app.on('open-file', async (event, path) => {
+  log.info(`Config file opened: ${path}`)
   // prevent default
   event.preventDefault()
   // load the file
-  loadFile(path, () => { buildTray(openPreferences) })
+  importConfig(path, () => { buildTray(openPreferences) })
   // if there is a window open... reload it
   if (win) win.reload()
 })
 
 // when app is ready...
 app.on('ready', async () => {
+  log.info('App is ready')
   // hide from dock
   app.dock.hide()
   const autoRebuild = () => {
@@ -158,18 +170,21 @@ app.on('window-all-closed', () => {
 
 // when openIconsFolder is recieved
 ipcMain.on('openIconsFolder', (_, __) => {
+  log.info('Opening icons folder')
   // open the icons folder
   shell.openPath(PATHS.ICONS_FOLDER)
 })
 
 // when connect is recieved
 ipcMain.on('connect', async (event, data) => {
+  log.info('Testing HASS connection')
   // check the connection and return the results
   event.returnValue = await hass.test(data)
 })
 
 // when save is recieved
 ipcMain.on('save', async (event, data) => {
+  log.info('Saving config')
   // try...
   try {
     // set the settings
@@ -187,6 +202,8 @@ ipcMain.on('save', async (event, data) => {
       success: true
     }
   } catch (err) {
+    log.info('Failed to save config')
+    log.error(err)
     // on error... return the error
     event.returnValue = {
       success: false,
@@ -197,15 +214,23 @@ ipcMain.on('save', async (event, data) => {
 
 // on save config...
 ipcMain.on('exportConfig', (_, __) => {
+  log.info('Exporting config')
+  // open the save dialog
   const saveDir = dialog.showSaveDialogSync(win, {
     filters: [{ name: 'Config', extensions: ['bar'] }],
     showsTagField: false,
     defaultPath: 'config.bar'
   })
+  log.info(saveDir ? `Saving config to ${saveDir}` : 'No config file selected. Doing nothing.')
+
+  // if no save directory was selected... return
   if (!saveDir) return
+
   try {
-    settings.write(saveDir)
+    exportConfig(saveDir)
   } catch (err) {
+    log.info('Failed to export config')
+    log.error(err)
     dialog.showErrorBox('Cannot Save Configuration', err.message)
   }
 })

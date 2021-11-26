@@ -1,5 +1,6 @@
 const HomeAssistant = require('homeassistant')
 const { Notification } = require('electron')
+const log = require('electron-log')
 const axios = require('axios')
 
 const data = require('./data')
@@ -10,6 +11,7 @@ let hass, settings
 
 // define reload function
 const reload = () => {
+  log.info('Reloading hass connection')
   // get new settings
   settings = settingsManager.getAll()
   // create new hass instance
@@ -27,6 +29,7 @@ module.exports.reload = reload
 
 // make test function to test hass conneciton
 module.exports.test = async (connection) => {
+  log.info('Testing connection...')
   // extract the url, port, and long lived access token
   const { url, port, llac } = connection
   // try...
@@ -41,12 +44,14 @@ module.exports.test = async (connection) => {
       },
       timeout: 2500
     })
+    log.info('Connection successful!')
     // if successful, return true wih the api message
     return {
       valid: true,
       message: apiStatus.message
     }
   } catch (err) {
+    log.info('Connection failed' + err.message)
     // on error, return false and the error message
     return {
       valid: false,
@@ -57,11 +62,13 @@ module.exports.test = async (connection) => {
 
 // function to check the status of hass
 module.exports.status = async () => {
+  log.info('Checking status...')
   // get latest settings
   const settings = settingsManager.getAll()
 
   // if any settings missing, return
   if (!settings.url || !settings.llac || !settings.port) {
+    log.info('No settings found')
     return {
       connected: false,
       message: 'No settings found'
@@ -80,12 +87,14 @@ module.exports.status = async () => {
       },
       timeout: 2500
     })
+    log.info('Connection successful!')
     // if successful, return true wih the api message
     return {
       connected: true,
       message: apiStatus.data
     }
   } catch (err) {
+    log.info('Connection failed' + err.message)
     // on error, return false and the error message
     return {
       connected: false,
@@ -94,33 +103,14 @@ module.exports.status = async () => {
   }
 }
 
-// function to get the state of a hass entity
-module.exports.state = async (entity) => {
-  // try...
-  try {
-    // split the entity into domain and entityId
-    const [domain, entityId] = entity.split('.')
-    // get the state of the entity
-    const response = await hass.states.get(domain, entityId)
-    // if no state... return nothing
-    if (!response.state) return
-    // return response
-    return response
-  } catch (err) {
-    // on error log error
-    console.log(`Failed to get state for ${entity}. Heres the error`)
-    console.error(err)
-    // return nothing
-    return undefined
-  }
-}
-
 // function to run actions
 module.exports.action = (action) => {
+  log.info('Running action...')
   // call the service
   hass.services.call(action.service, action.domain, action.serviceData)
     // when promise resolves...
     .then((res) => {
+      log.info('Action completed')
       // if the result is not a string then it was succesfull so return
       if (typeof res !== 'string') return
       // otherwise throw an error
@@ -128,6 +118,7 @@ module.exports.action = (action) => {
     })
     // on error...
     .catch((err) => {
+      log.info('Failed to call action ' + err.message)
       // show a notification with the error
       new Notification({
         title: 'Action Failed',
@@ -139,8 +130,11 @@ module.exports.action = (action) => {
 
 // function to render a template
 module.exports.render = async (template) => {
+  log.debug('Rendering template...')
+  log.debug(template)
   // if the template is in the cache...
   if (cache.get(template)) {
+    log.debug('Template found in cache')
     // return the cached template
     return cache.get(template)
   }
@@ -149,21 +143,17 @@ module.exports.render = async (template) => {
     // render the template
     const value = await hass.templates.render(template)
     // if error message...
-    if (value.message) {
-      console.log(value)
-      // return INVALID TEMPLATE
-      return 'INVALID TEMPLATE'
-    }
+    if (value.message) throw new Error(value.message)
+    log.debug(`Template resolved to: ${String(value)}`)
     // store in cache
     cache.set(template, value)
     // return the rendered template as a string
     return String(value)
   } catch (err) {
+    log.info('Failed to render template')
+    log.error(err.message)
     // on error...
     // log the error
-    console.log(template)
-    console.log('Failed to render template. Heres the error')
-    console.error(err)
     // return INVALID TEMPLATE
     return 'INVALID TEMPLATE'
   }
