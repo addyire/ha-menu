@@ -105,4 +105,7 @@ dist
 
 # Ignore test config file
 config.json
+# Ignore icon psd
+icon.psd
+
 *.DS_store
