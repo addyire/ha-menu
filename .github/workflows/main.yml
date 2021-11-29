@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-latest, windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -26,7 +26,7 @@ jobs:
           # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.github_token }}
           
-          args: "--x64 --arm64"
+          args: "--x64 --arm64 --win"
 
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
