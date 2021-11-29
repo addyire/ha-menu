@@ -7,8 +7,20 @@ const itemBuilder = require('./modules/itemBuilder')
 const { importConfig, exportConfig } = require('./modules/configuration')
 
 // set some variables
+const isWindows = process.platform === 'win32'
 let refreshInterval = settings.get('refreshInterval') * 60 * 1000 // default to 30 minutes
 let win, tray
+
+if (isWindows && app.isPackaged && process.argv.length >= 2) {
+  (async () => {
+    await app.whenReady()
+    dialog.showErrorBox({
+      title: 'Feature Not Supported',
+      message: 'Please import the configuration file from the preferences window.'
+    })
+    process.exit()
+  })()
+}
 
 // open the preferences window
 const openPreferences = () => {
@@ -19,7 +31,7 @@ const openPreferences = () => {
   // create the preference window
   win = new BrowserWindow({
     width: 850,
-    height: 670,
+    height: isWindows ? 700 : 670,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -70,6 +82,9 @@ const buildTray = async () => {
   // create the tray if one doesnt exist
   if (!tray) tray = new Tray(PATHS.MENUBAR_ICONS.TRANSPARENT)
 
+  // open tray on click on windows
+  isWindows && tray.on('click', () => tray.popUpContextMenu())
+
   // set the tray icon to be transparent to indicate reload
   tray.setImage(PATHS.MENUBAR_ICONS.TRANSPARENT)
 
@@ -95,9 +110,9 @@ const buildTray = async () => {
     })
   } else {
     // otherwise, set the tray title
-    if (config.titleTemplate) {
+    if (!isWindows && config.titleTemplate) {
       trayTitle = await hass.render(config.titleTemplate)
-    } else if (config.title) {
+    } else if (!isWindows && config.title) {
       trayTitle = config.title
     }
 
@@ -146,7 +161,7 @@ app.on('open-file', async (event, path) => {
 app.on('ready', async () => {
   log.info('App is ready')
   // hide from dock
-  app.dock.hide()
+  !isWindows && app.dock.hide()
   const autoRebuild = () => {
     // build the tray
     buildTray()
