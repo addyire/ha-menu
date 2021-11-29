@@ -1,7 +1,7 @@
 {
   "name": "ha-menu",
   "description": "Customizable way to interact with Home Assistant through the menu bar on macOS.",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "author": {
     "name": "Addison Ireland"
   },
@@ -31,7 +31,8 @@
     "start": "electron .",
     "lint": "eslint . --fix",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "publish": "electron-builder --mac --x64 --arm64 -p always"
   },
   "devDependencies": {
     "electron": "^15.3.0",
