@@ -79,14 +79,17 @@ const buildTray = async () => {
   const { config } = settings.getAll()
   const hassStatus = await hass.status()
 
+  // define icon
+  const trayIcon = config.icon || config.iconTemplate ? PATHS.ICON_PATH_GENERATOR(config.icon || (await hass.render(config.iconTemplate))) : PATHS.MENUBAR_ICONS.DEFAULT
+
   // create the tray if one doesnt exist
-  if (!tray) tray = new Tray(PATHS.MENUBAR_ICONS.TRANSPARENT)
+  if (!tray) tray = new Tray(trayIcon)
 
   // open tray on click on windows
   isWindows && tray.on('click', () => tray.popUpContextMenu())
 
   // set the tray icon to be transparent to indicate reload
-  tray.setImage(PATHS.MENUBAR_ICONS.TRANSPARENT)
+  if (!config.icon && !config.iconTemplate) tray.setImage(PATHS.MENUBAR_ICONS.TRANSPARENT)
 
   // initialize the menuTemplate and trayTitle
   let menuTemplate = []
@@ -103,7 +106,7 @@ const buildTray = async () => {
     menuTemplate.push({
       label: 'Unable To Connect',
       enabled: false,
-      icon: PATHS.ICONS.WARNING_ICON
+      icon: PATHS.MENUBAR_ICONS.WARNING_ICON
     }, {
       label: 'Retry',
       click: () => { buildTray() }
@@ -120,7 +123,7 @@ const buildTray = async () => {
     // build the tray items
     menuTemplate = await itemBuilder(config.items, () => { buildTray() })
     // set the tray image
-    tray.setImage(PATHS.MENUBAR_ICONS.DEFAULT)
+    tray.setImage(trayIcon)
   }
 
   // add constant items
@@ -251,7 +254,7 @@ ipcMain.on('exportConfig', (_, __) => {
 })
 
 // on load from file...
-ipcMain.on('loadFromFile', (_, __) => {
+ipcMain.on('importConfig', (_, __) => {
   openLoadConfigDialog()
 })
 

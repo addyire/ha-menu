@@ -4,11 +4,12 @@
 An **insanely** customizable way to interact with Home Assistant in the menubar
 <img src="https://i.imgur.com/HAag5aG.png" width=800>
 
+# [Example Configuration](example/README.md)
+
 # Table Of Contents
 
 - [Installation](#installation)
 - [App Configuration](#app-configuration)
-- [Example Configuration](example/README.md)
 - [Importing & Exporting](#importing-&-exporting)
 - [Menubar Configuration](#menubar-configuration)
   - [Title](#title)
@@ -61,8 +62,9 @@ In the preferences window, you can export your configuration as a `.bar` file. Y
 
 In the preferences window, under `Config` is where you will put the JSON which creates your custom menubar.
 
-* `items` {[`MenuItem`]}: Your list of menu items
-* `title` {`String`}: The text that will show up next to the Home Assistant icon in the MenuBar. **Limited to 34 charachters.**
+* **required** `items` {[`MenuItem`]}: Your list of menu items
+* **templatable** `title` {`String`} : The text that will show up next to the Home Assistant icon in the MenuBar. **Limited to 34 charachters.**
+* **templatable** `icon` {`String`}: Name of the icon you wish to use
 
 #### Example
 ```json
@@ -104,8 +106,8 @@ There are 4 types of Menu Items
 ### Type: `label`
 
 * **required** `type`: `label`
-* `label` {`String`}: The label for this Menu Item
-* `icon` {`String`}: The icon name for this item
+* **templatable** `label` {`String`}: The label for this Menu Item
+* **templatable** `icon` {`String`}: The icon name for this item
 * `reload` {`Boolean`}: Whether or not the Menu Bar should be reloaded on click
 * `action` {`MenuAction`}: The action to run when clicked
 * `checkedTemplate` {`String`}: Whether or not this label should be checked. The string is a Home Assistant template which should resolve to `on`, `true`,`off`, or `false`.
@@ -152,9 +154,9 @@ There are 4 types of Menu Items
 Creates a dropdown menu
 
 * **required** `type`: `dropdown`
-* **required** `label` {`String`}: The label for this dropdown
+* **required** **templatable**`label` {`String`}: The label for this dropdown
 * **required** `items` {[`MenuItem`]}: A list of Menu Items to be displayed
-* `icon` {`String`}: The icon name for this item
+* **templatable** `icon` {`String`} : The icon name for this item
 
 #### Example
 <img src="https://imgur.com/L3r9WOO.png" width=400>
@@ -206,8 +208,8 @@ Creates a dropdown menu
 Looks like a label but opens Home Assistant in your browser when clicked.
 
 * **required** `type`: `open_hass`
-* **required** `label` {`String`}: The label for this item
-* `icon` {`String`}: The icon name for this item
+* **required** **templatable** `label` {`String`}: The label for this item
+* `icon` **templatable** {`String`}: The icon name for this item
 
 ## MenuAction
 
@@ -241,6 +243,7 @@ To add an icon to your Menu Bar follow these steps
 
 * Make the size of your image `32x32`
 * Add `@2x` to the end of your file name to make it a "High Resolution Image" (Read below for more information)
+* Get icons from [here](https://materialdesignicons.com/). Export them as PNG at 36x66 then use @2x magnification
 
 ### High Resolution Image
 
@@ -292,6 +295,13 @@ It is recommended that your icons are made a template. To make your icon a templ
 To make a field a template just add `Template` to the end of the field name and put your template in the value.
 
 #### Example
+```json
+{
+  "labelTemplate": "{{ states('light.my_light') }}"
+}
+```
+Turns into...
+
 ```json
 {
   "labelTemplate": "{{ states('light.my_light') }}"

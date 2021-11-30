@@ -76,7 +76,7 @@ elements.buttons.saveConfig.addEventListener('click', (e) => {
 
 elements.buttons.loadFile.addEventListener('click', (e) => {
   e.preventDefault()
-  ipcRenderer.send('loadFromFile', {})
+  ipcRenderer.send('importConfig', {})
   location.reload()
 })
 

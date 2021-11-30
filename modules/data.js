@@ -2,8 +2,11 @@ const path = require('path')
 const fs = require('fs')
 const electron = require('electron')
 
+const isWindows = process.platform === 'win32'
 const userDataPath = (electron.app || electron.remote.app).getPath('userData')
+
 const settingsPath = path.join(userDataPath, 'settings.json')
+const iconPath = path.join(__dirname, '..', 'assets')
 
 const DEFAULT_SETTINGS = {
   url: '',
@@ -72,12 +75,10 @@ class SpecialDictionary {
 module.exports = {
   PATHS: {
     MENUBAR_ICONS: {
-      DEFAULT: path.join(__dirname, '../assets/iconTemplate@3x.png'),
-      TRANSPARENT: path.join(__dirname, '../assets/transparentIconTemplate@3x.png'),
-      ERROR: path.join(__dirname, '../assets/redIcon@3x.png')
-    },
-    ICONS: {
-      WARNING_ICON: path.join(__dirname, '../assets/alertTemplate@2x.png')
+      DEFAULT: path.join(iconPath, isWindows ? 'windows' : 'macos', isWindows ? 'icon@3x.png' : 'iconTemplate@3x.png'),
+      TRANSPARENT: path.join(iconPath, isWindows ? 'windows' : 'macos', isWindows ? 'transparentIcon@3x.png' : 'transparentIconTemplate@3x.png'),
+      WARNING_ICON: path.join(iconPath, isWindows ? 'windows' : 'macos', isWindows ? 'alert@2x.png' : 'alertTemplate@2x.png'),
+      ERROR: path.join(iconPath, 'redIcon@3x.png')
     },
     ICONS_FOLDER: path.join(userDataPath, 'icons'),
     PAGES: {
@@ -94,7 +95,7 @@ module.exports.PATHS.ICON_PATH_GENERATOR = (name) => {
   // check if the icon exists... if it does return the path
   if (fs.existsSync(iconPath)) return iconPath
   // otherwise return the warning icon because the path wasn't found
-  else return module.exports.PATHS.ICONS.WARNING_ICON
+  else return module.exports.PATHS.MENUBAR_ICONS.WARNING_ICON
 }
 
 // check if the icons folder doesnt exists
