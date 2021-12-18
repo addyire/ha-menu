@@ -11,6 +11,7 @@ An **insanely** customizable way to interact with Home Assistant in the menubar
 - [Installation](#installation)
 - [App Configuration](#app-configuration)
 - [Importing & Exporting](#importing-&-exporting)
+- [Icon Downloader](#icon-downloader)
 - [Menubar Configuration](#menubar-configuration)
   - [Title](#title)
   - [Menu Item Types](#menu-item-types)
@@ -35,10 +36,6 @@ To build it yourself...
 
 To open the Preferences window, click the Home Assistant Icon in your menubar, and then go to `Preferences`. 
 
-The configuration file is stored here if you wish to edit it yourself: <br>
-`/Users/[YOUR USERNAME]/Library/Application Support/ha-menu/settings.json` <br>
-*Note: This file also contains the app configuration settings so make sure you know what you are doing* 
-
 * ### `Server URL`
   * #### Example: `http://homeassistant`
   * The URL to your server. Don't add a `/` or a port to the end of the URL.
@@ -56,7 +53,25 @@ The refresh interval is how often the menubar will automatically refresh with ne
 
 # Importing & Exporting
 
-In the preferences window, you can export your configuration as a `.bar` file. You can also import `.bar` configuration files from the preferences window. If you want a shortcut to import configuration files, you can hold **Shift** while clicking `Preferences` in the menubar or you can just double click on a `.bar` file.
+In the preferences window, you can export your configuration as a `.bar` file. You can also import `.bar` configuration files from the preferences window. If you want a shortcut to import configuration files, you can hold **Shift** while clicking `Preferences` in the menubar or you can just double click on a `.bar` file. 
+
+# Icon Downloader
+
+The icon downloader allows you to easily download icons from `materialdesignicons.com`. I would recommend searching for icons on their website, then downloading them with the downloader. You can open the `Icon Downloader` by clicking `Icon Downloader` in the preferences window. All downloaded icons are stored in the `Icons Folder`.
+
+## Inputs
+
+* ### Icon Name
+  * The materialdesignicons name of the icon
+
+* ### Size
+  * The size of the icon
+
+* ### Color
+  * The color of the icon
+
+* ### File Name
+  * The path the file with be stored at. *This is just a path that gets added on to the icons folder path, so you can use slashes to go into folders*
 
 # Menubar Configuration
 
@@ -75,7 +90,8 @@ In the preferences window, under `Config` is where you will put the JSON which c
       "label": "So much customization!"
     }
   ],
-  "title": "Hello World!"
+  "title": "Hello World!",
+  "
 }
 ```
 
@@ -85,8 +101,10 @@ The title shows to the right of the icon in the menu bar. The title can be set b
 
 
 #### Example
+<img src="https://i.imgur.com/ewmRPhm.png"><br>
 ```json
 {
+  "items": [],
   "title": "Hello!"
 }
 ```
@@ -110,7 +128,7 @@ There are 4 types of Menu Items
 * **templatable** `icon` {`String`}: The icon name for this item
 * `reload` {`Boolean`}: Whether or not the Menu Bar should be reloaded on click
 * `action` {`MenuAction`}: The action to run when clicked
-* `checkedTemplate` {`String`}: Whether or not this label should be checked. The string is a Home Assistant template which should resolve to `on`, `true`,`off`, or `false`.
+* `checkedTemplate` {`String`}: Whether or not this label should be checked. The string is a Home Assistant template which should resolve to `on`, `true`,`off`, or `false`. When clicked the check will toggle IN THE UI ONLY. I would recommend making the action some sort of toggle, and having `reload` set to `true`.
 * `hiddenTemplate` {`String`}: Whether or not this label should be hidden. The string is a Home Assistant template which should resolve to `on`, `true`,`off`, or `false`.  
 
 #### Note
@@ -297,7 +315,7 @@ To make a field a template just add `Template` to the end of the field name and 
 #### Example
 ```json
 {
-  "labelTemplate": "{{ states('light.my_light') }}"
+  "label": "State of my light"
 }
 ```
 Turns into...

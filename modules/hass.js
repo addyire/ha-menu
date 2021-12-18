@@ -51,7 +51,7 @@ module.exports.test = async (connection) => {
       message: apiStatus.message
     }
   } catch (err) {
-    log.info('Connection failed' + err.message)
+    log.info('Connection failed ' + err.message)
     // on error, return false and the error message
     return {
       valid: false,
@@ -94,7 +94,7 @@ module.exports.status = async () => {
       message: apiStatus.data
     }
   } catch (err) {
-    log.info('Connection failed' + err.message)
+    log.info('Connection failed ' + err.message)
     // on error, return false and the error message
     return {
       connected: false,

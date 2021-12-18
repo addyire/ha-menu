@@ -1,7 +1,6 @@
-const { shell } = require('electron')
-
 const hass = require('./hass')
-const { settings, PATHS } = require('./data')
+const { PATHS } = require('./data')
+const { openHASSInBrowser } = require('./configuration')
 
 // define function to build items from config
 const buildItems = async (items, rebuildFunction) => {
@@ -97,12 +96,7 @@ const buildItems = async (items, rebuildFunction) => {
       // for open_hass...
       case 'open_hass': {
         // set the click function
-        builtItem.click = () => {
-          // get the url and port from settings
-          const { url, port } = settings.getAll()
-          // open the url in the default browser
-          shell.openExternal(`${url}:${port}`)
-        }
+        builtItem.click = openHASSInBrowser
         // break
         break
       }

@@ -82,11 +82,17 @@ module.exports = {
     },
     ICONS_FOLDER: path.join(userDataPath, 'icons'),
     PAGES: {
-      PREFERENCES: path.join(__dirname, '../views/preferences.html')
+      PREFERENCES: path.join(__dirname, '../views/preferences/index.html'),
+      ICON_DOWNLOADER: path.join(__dirname, '../views/downloader/index.html')
     }
   },
   settings: new SpecialDictionary(settingsPath, DEFAULT_SETTINGS, configValidator),
   cache: new SpecialDictionary()
+}
+
+module.exports.DELETE_ALL_ICONS = () => {
+  fs.rmSync(module.exports.PATHS.ICONS_FOLDER, { recursive: true })
+  fs.mkdirSync(module.exports.PATHS.ICONS_FOLDER)
 }
 
 module.exports.PATHS.ICON_PATH_GENERATOR = (name) => {

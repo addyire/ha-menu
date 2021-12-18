@@ -1,4 +1,4 @@
-const { Notification, dialog } = require('electron')
+const { Notification, dialog, shell } = require('electron')
 
 const fs = require('fs')
 const path = require('path')
@@ -28,6 +28,19 @@ const exportConfig = (savePath) => {
   archive.directory(PATHS.ICONS_FOLDER, 'icons')
   // finalize the archive
   archive.finalize()
+}
+
+// TODO move this somewhere else
+// function to open HASS url in browser
+const openHASSInBrowser = () => {
+  // get the url and port from settings
+  const { url, port } = settings.getAll()
+
+  // if no url or port... return
+  if (!url || !port) return
+
+  // open the url in the default browser
+  shell.openExternal(`${url}:${port}`)
 }
 
 // function to import configuration
@@ -86,5 +99,6 @@ const importConfig = (filePath, rebuildFunction) => {
 
 module.exports = {
   importConfig,
-  exportConfig
+  exportConfig,
+  openHASSInBrowser
 }

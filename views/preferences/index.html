@@ -4,7 +4,9 @@
   <title>HA Menu Settings</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-</head>
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css" rel="stylesheet">
+
+  </head>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-nightshade.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/js/darkmode.min.js"></script>
@@ -22,8 +24,14 @@
       </div>
       <div class="col-9 d-flex align-items-center justify-content-end">
         <div class="btn-group" role="group">
-          <button type="button" class="btn btn-outline-primary" id="saveConfig">Export</button>
-          <button type="button" class="btn btn-outline-primary" id="loadFile">Import</button>   
+          <button type="button" class="btn btn-outline-primary" id="saveConfig">
+            <span class="mdi mdi-export"></span>
+            Export
+          </button>
+          <button type="button" class="btn btn-outline-primary" id="loadFile">
+            <span class="mdi mdi-import"></span>
+            Import
+          </button>
         </div>
       </div>
       <div class="col-9">
@@ -44,25 +52,29 @@
           <label for="hassLLAC" class="form-label">Long Lived Access Token</label>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-6">
         <input type="checkbox" class="btn-check" id="openOnStart" autocomplete="off" checked=true>
         <label class="btn col-12 btn-outline-primary" for="openOnStart">
+          <span class="mdi mdi-reload"></span>
           Open On Startup
         </label>
       </div>
-      <div class="col-4">
+      <div class="col-6">
         <button type="button" class="col-12 btn btn-primary" id="connect">
+          <span class="mdi mdi-check-circle"></span>
           Validate Connection
         </button>
       </div>
-      <div class="col-4">
+      <div class="col-6">
         <button type="button" class="col-12 btn btn-primary" id="open-icons">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder2-open"
-            viewBox="0 0 16 16">
-            <path
-              d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v.64c.57.265.94.876.856 1.546l-.64 5.124A2.5 2.5 0 0 1 12.733 15H3.266a2.5 2.5 0 0 1-2.481-2.19l-.64-5.124A1.5 1.5 0 0 1 1 6.14V3.5zM2 6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5a.5.5 0 0 0-.5.5V6zm-.367 1a.5.5 0 0 0-.496.562l.64 5.124A1.5 1.5 0 0 0 3.266 14h9.468a1.5 1.5 0 0 0 1.489-1.314l.64-5.124A.5.5 0 0 0 14.367 7H1.633z" />
-          </svg>
+          <span class="mdi mdi-folder"></span>
           Open Icons Folder
+        </button>
+      </div>
+      <div class="col-6">
+        <button type="button" class="col-12 btn btn-primary" id="icon-downloader">
+          <span class="mdi mdi-download"></span>
+          Icon Downloader
         </button>
       </div>
       <div class="col-12">
@@ -80,7 +92,10 @@
         <h1>Configuration</h1>
       </div>
       <div class="col-6 d-flex align-items-center justify-content-end">
-        <button type="button" class="btn btn-outline-primary" id="paste">Paste</button>
+        <button type="button" class="btn btn-outline-primary" id="paste">
+          <span class="mdi mdi-content-paste"></span>
+          Paste
+        </button>
       </div>
       <div class="col-12">
         <textarea class="form-control" id="appConfig" rows=5 cols="100"></textarea>
@@ -90,11 +105,13 @@
       </div>
       <div class="col">
         <button type="submit" class="col-12 btn btn-success" id="save">
+          <span class="mdi mdi-content-save"></span>
           Save + Reload
         </button>
       </div>
       <div class="col" id="exit">
         <button class="col-12 btn btn-danger" id="exit">
+          <span class="mdi mdi-close"></span>
           Close
         </button>
       </div>
@@ -155,12 +172,13 @@
         <button type="button" class="btn-close btn-close-black" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
-        I failed connected to Home Assistant!
+        I failed connected to Home Assistant with this error:<br>
+        <span id="failed-connection-reason"></span>
       </div>
     </div>
   </div>
   </div>
 </body>
-<script src="js/main.js"></script>
+<script src="main.js"></script>
 
 </html>

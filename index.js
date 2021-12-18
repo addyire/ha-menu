@@ -1,15 +1,16 @@
 const { app, BrowserWindow, ipcMain, shell, Tray, Menu, dialog } = require('electron')
 const log = require('electron-log')
 
-const { PATHS, settings, cache } = require('./modules/data')
+const { PATHS, settings, cache, DELETE_ALL_ICONS } = require('./modules/data')
 const hass = require('./modules/hass')
 const itemBuilder = require('./modules/itemBuilder')
-const { importConfig, exportConfig } = require('./modules/configuration')
+const { importConfig, exportConfig, openHASSInBrowser } = require('./modules/configuration')
+const { loadIcons } = require('./modules/iconDownloader')
 
 // set some variables
 const isWindows = process.platform === 'win32'
 let refreshInterval = settings.get('refreshInterval') * 60 * 1000 // default to 30 minutes
-let win, tray
+let win, tray, downloader
 
 if (isWindows && app.isPackaged && process.argv.length >= 2) {
   (async () => {
@@ -22,6 +23,24 @@ if (isWindows && app.isPackaged && process.argv.length >= 2) {
   })()
 }
 
+// function to open icon downloader
+const openIconDownloader = () => {
+  loadIcons()
+
+  if (downloader && downloader.isDestroyed && !downloader.isDestroyed()) return downloader.show()
+
+  downloader = new BrowserWindow({
+    width: 600,
+    height: 350,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  })
+
+  downloader.loadURL(`file://${PATHS.PAGES.ICON_DOWNLOADER}`)
+}
+
 // open the preferences window
 const openPreferences = () => {
   log.info('Opening preferences window')
@@ -31,7 +50,7 @@ const openPreferences = () => {
   // create the preference window
   win = new BrowserWindow({
     width: 850,
-    height: isWindows ? 700 : 670,
+    height: 720,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -54,7 +73,24 @@ const openPreferences = () => {
 
 // open a configuration file
 const openLoadConfigDialog = () => {
-  log.info('Opening load config dialog')
+  log.info('Opening load config flow')
+
+  const deleteAll = dialog.showMessageBoxSync({
+    type: 'question',
+    buttons: ['Cancel', 'Delete', 'Merge'],
+    defaultId: 2,
+    cancelId: 0,
+    message: 'What would you like to do with your pre-existing icons?',
+    title: 'Delete or Merge?'
+  })
+
+  // if cancel, return
+  if (deleteAll === 0) return
+  // if delete, delete icons
+  if (deleteAll === 1) DELETE_ALL_ICONS()
+
+  // log the action
+  log.info(`The user chose to ${deleteAll === 1 ? 'delete' : 'merge'} all icons.`)
 
   const path = dialog.showOpenDialogSync({
     title: 'Open Configuration File',
@@ -85,8 +121,13 @@ const buildTray = async () => {
   // create the tray if one doesnt exist
   if (!tray) tray = new Tray(trayIcon)
 
+  // update tray text to reflect that an update is taking place
+  if (config.icon || config.iconTemplate) tray.setTitle(tray.getTitle().substr(0, 33) + '*')
+
   // open tray on click on windows
   isWindows && tray.on('click', () => tray.popUpContextMenu())
+
+  tray.on('right-click', openHASSInBrowser)
 
   // set the tray icon to be transparent to indicate reload
   if (!config.icon && !config.iconTemplate) tray.setImage(PATHS.MENUBAR_ICONS.TRANSPARENT)
@@ -135,7 +176,7 @@ const buildTray = async () => {
         event.shiftKey ? openLoadConfigDialog() : openPreferences()
       }
     },
-    { label: 'Quit', click: () => { app.quit() }, role: 'quit' }
+    { label: 'Quit', click: () => { app.quit() } }
   )
 
   // set the tray context menu
@@ -162,6 +203,8 @@ app.on('open-file', async (event, path) => {
 
 // when app is ready...
 app.on('ready', async () => {
+  loadIcons()
+
   log.info('App is ready')
   // hide from dock
   !isWindows && app.dock.hide()
@@ -179,8 +222,9 @@ app.on('ready', async () => {
 
 // when the window is closed...
 app.on('window-all-closed', () => {
-  // set the window to null
+  // set the windows to null
   win = null
+  downloader = null
   // this also prevents the default behavior of quitting the app
 })
 
@@ -239,7 +283,7 @@ ipcMain.on('exportConfig', (_, __) => {
     showsTagField: false,
     defaultPath: 'config.bar'
   })
-  log.info(saveDir ? `Saving config to ${saveDir}` : 'No config file selected. Doing nothing.')
+  log.info(saveDir ? `Saving config to ${saveDir}` : 'No save location specified. Doing nothing.')
 
   // if no save directory was selected... return
   if (!saveDir) return
@@ -253,6 +297,11 @@ ipcMain.on('exportConfig', (_, __) => {
   }
 })
 
+// on open icon downloader...
+ipcMain.on('open-icon-downloader', (_, __) => {
+  openIconDownloader()
+})
+
 // on load from file...
 ipcMain.on('importConfig', (_, __) => {
   openLoadConfigDialog()
@@ -262,4 +311,5 @@ ipcMain.on('importConfig', (_, __) => {
 ipcMain.on('exit', (_, __) => {
   // close the window
   if (win) win.close()
+  if (downloader && !downloader.isDestroyed()) downloader.close()
 })

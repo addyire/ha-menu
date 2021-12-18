@@ -9,6 +9,7 @@ const elements = {
     saveConfig: document.getElementById('saveConfig'),
     loadFile: document.getElementById('loadFile'),
     paste: document.getElementById('paste'),
+    iconDownloader: document.getElementById('icon-downloader'),
   },
   fields: {
     url: document.getElementById('hassURL'),
@@ -21,6 +22,7 @@ const elements = {
   elements: {
     version: document.getElementById('version'),
     refreshTime: document.getElementById('refreshTime'),
+    failedConnectionReason: document.getElementById('failed-connection-reason'),
   },
   toasts: {
     connectSuccess: new bootstrap.Toast(document.getElementById('connect-success-toast')),
@@ -64,8 +66,8 @@ elements.buttons.connect.addEventListener('click', async () => {
   if (response.valid) {
     elements.toasts.connectSuccess.show()
   } else {
+    elements.elements.failedConnectionReason.innerText = response.message
     elements.toasts.connectFailure.show()
-    // TODO show connection failure error
   }
 })
 
@@ -101,6 +103,10 @@ elements.buttons.openIcons.addEventListener('click', () => {
 elements.buttons.exit.addEventListener('click', (e) => {
   e.preventDefault()
   ipcRenderer.send('exit', {})
+})
+
+elements.buttons.iconDownloader.addEventListener('click', () => {
+  ipcRenderer.send('open-icon-downloader', {})
 })
 
 elements.buttons.save.addEventListener('click', async (e) => {
