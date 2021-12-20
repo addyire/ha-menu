@@ -13,5 +13,5 @@
     "rules": {
 
     },
-    "ignorePatterns": ["**/views/js/**"]
+    "ignorePatterns": ["**/views/**"]
 }
