@@ -9,7 +9,7 @@ const { loadIcons } = require('./modules/iconDownloader')
 
 // set some variables
 const isWindows = process.platform === 'win32'
-let refreshInterval = settings.get('refreshInterval') * 60 * 1000 // default to 30 minutes
+let refreshInterval = settings.get('refreshInterval')  * 1000 // default to 30 seconds
 let win, tray, downloader
 
 if (isWindows && app.isPackaged && process.argv.length >= 2) {
